@@ -16,20 +16,10 @@ const usuariosPost = async (req, res = response) => {
     const {nombre, correo, password, rol, google = false} = req.body
     const usuario = new Usuario({nombre, correo, password, rol})
 
-    // Verificar si el correo exite
-    const existeEmail = await Usuario.findOne({correo})
-    if(existeEmail) {
-        return res.status(400).json({
-            ok: false,
-            msg: 'email ya existe'
-        })
-    }
-
     // Encriptar contraseña usuario
     const salt = bcryptjs.genSaltSync()
     usuario.password = bcryptjs.hashSync(password, salt)
     usuario.google = google
-
 
     // Guardar en BD
     await usuario.save()
@@ -38,9 +28,6 @@ const usuariosPost = async (req, res = response) => {
         msg: 'post API - Controlador',
         usuario
     })
-
-
-
 }
 
 const usuariosPut = (req, res = response) => {
